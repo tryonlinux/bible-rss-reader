@@ -1,48 +1,8 @@
-/* eslint-disable */
-import express from 'express';
-import path from 'path';
-import compression from 'compression';
-import helmet from 'helmet';
-import rateLimit from 'express-rate-limit';
 import fullBookList from './resources/full.json';
 import otBookList from './resources/ot.json';
 import ntBookList from './resources/nt.json';
 import translationsJSON from './resources/translations.json';
-// Check if the code is running in development or production
-const isDevelopment = process.env.NODE_ENV !== 'production';
 
-// Set the resources path based on the environment
-
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-  message: 'Too many requests, please try again later.',
-});
-
-const app = express();
-app.use(compression());
-//Use Limit
-app.use(limiter);
-// Use Helmet
-app.use(helmet());
-app.use(helmet.hidePoweredBy());
-app.use(
-  helmet.contentSecurityPolicy({
-    directives: {
-      defaultSrc: ["'self'"], // Only allow content from our own domain
-      scriptSrc: ["'self'"], // Only allow scripts from our own domain
-    },
-  })
-);
-app.use(
-  helmet.hsts({
-    maxAge: 31536000, // Preferably set it for one year
-    includeSubDomains: true, // Apply rule to subdomains as well
-    preload: true,
-  })
-);
-
-const port = 3000;
 const bibleGatewaySlug = 'https://www.biblegateway.com/passage/?search=';
 
 interface BookListMap {
@@ -51,6 +11,7 @@ interface BookListMap {
   nt: typeof ntBookList;
   [key: string]: typeof fullBookList | typeof otBookList | typeof ntBookList;
 }
+
 interface BookChapter {
   Book: string;
   Chapter: number;
@@ -132,58 +93,20 @@ const generateRSSXML = (
 </rss>`;
 };
 
-if (isDevelopment) {
-  app.use(express.static(path.join(__dirname, 'public')));
-
-  app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '/public/index.html'));
-  });
-}
-
-//localhost:3000/rssbible/ot/esv/20230801/3/feed.rss
-app.get('/rssbible/:plan/:translation/:startDate/:chapters/feed.rss', (req, res) => {
-  let plan = SanitizePlan(req.params.plan);
-  let startDate = SanitizeDate(req.params.startDate);
-  let chapters = SanitizeChapters(req.params.chapters);
-  let translation = SanitizeTranslation(req.params.translation);
-
-  const feedMetadata = {
-    title: 'Bible Plan Feed',
-    description: 'Go to www.bibleplanfeed.com for more information.',
-    feedUrl: `https://www.bibleplanfeed.com/rssbible/${plan}/${formatDateToyyyyMMdd(
-      startDate
-    )}/${translation}/${chapters}/feed.rss`,
-    siteUrl: 'https://www.bibleplanfeed.com/',
-    imageUrl: 'https://www.bibleplanfeed.com/icon.png',
-    managingEditor: 'github.com/tryonlinux - Not affiliated with Bible Gateway',
-    webMaster: 'github.com/tryonlinux',
-    copyright: 'github.com/tryonlinux  - Not affiliated with Bible Gateway',
-    language: 'en',
-    pubDate: new Date(),
-    ttl: 60,
-  };
-
-  const items = BuildRSSFeedItems(plan, translation, startDate, chapters);
-  const rssXML = generateRSSXML(feedMetadata, items);
-
-  res.type('application/rss+xml');
-  res.set('Cache-Control', 'public, max-age=3600');
-  res.send(rssXML);
-});
-//Ensure the plan is valid, if not return full
+// Ensure the plan is valid, if not return full
 const SanitizePlan = (plan: any): 'nt' | 'ot' | 'full' => {
   const validValues: Array<'nt' | 'ot' | 'full'> = ['nt', 'ot', 'full'];
   return validValues.includes(plan) ? plan : 'full';
 };
 
-//Ensure the date is valid, if not return today
+// Ensure the date is valid, if not return today
 const SanitizeDate = (dateString: string): Date => {
   if (dateString.length !== 8) {
-    return new Date(); // Return today's date as default
+    return new Date();
   }
   try {
     const year = parseInt(dateString.substring(0, 4));
-    const month = parseInt(dateString.substring(4, 6)) - 1; // months are 0-indexed in JavaScript
+    const month = parseInt(dateString.substring(4, 6)) - 1;
     const day = parseInt(dateString.substring(6, 8));
 
     // Validate ranges
@@ -203,18 +126,17 @@ const SanitizeDate = (dateString: string): Date => {
   }
 };
 
-//Ensure the translation is valid, if not return ESV
+// Ensure the translation is valid, if not return ESV
 const SanitizeTranslation = (translation: string): string => {
   const found = translationsJSON.find((item) => item.Code === translation.toUpperCase());
   return found ? found.Code : 'ESV';
 };
 
-//Ensure the Chapter is valid, if not return 1
+// Ensure the Chapter is valid, if not return 1
 const SanitizeChapters = (chapters: string): number => {
   if (chapters.length > 2) {
-    return 1; // Return 1 if over 99 chapters
+    return 1;
   }
-
   const result = parseInt(chapters, 10);
   if (isNaN(result) || result < 1 || result > 99) {
     return 1;
@@ -284,10 +206,65 @@ function getDaysBetween(date: Date): number {
 const BuildBibleGatewayURL = (book: string, chapter: number, translation: string): string =>
   `${bibleGatewaySlug}${encodeURIComponent(book)}%20${chapter}&version=${translation}`;
 
-//Listen on port port (only when run directly, not when imported for testing)
-if (require.main === module) {
-  app.listen(port, () => console.log(`Express is listening at http://localhost:${port}`));
+// Environment interface for Workers Assets
+interface Env {
+  ASSETS: {
+    fetch: (request: Request) => Promise<Response>;
+  };
 }
 
-// Export app for testing
-export default app;
+// Main Worker fetch handler
+export default {
+  async fetch(request: Request, env: Env): Promise<Response> {
+    const url = new URL(request.url);
+
+    // Handle RSS feed endpoint
+    const rssMatch = url.pathname.match(/^\/rssbible\/([^\/]+)\/([^\/]+)\/([^\/]+)\/([^\/]+)\/feed\.rss$/);
+
+    if (rssMatch) {
+      const [, plan, translation, startDate, chapters] = rssMatch;
+
+      const sanitizedPlan = SanitizePlan(plan);
+      const sanitizedStartDate = SanitizeDate(startDate);
+      const sanitizedChapters = SanitizeChapters(chapters);
+      const sanitizedTranslation = SanitizeTranslation(translation);
+
+      const feedMetadata = {
+        title: 'Bible Plan Feed',
+        description: 'Go to www.bibleplanfeed.com for more information.',
+        feedUrl: `https://www.bibleplanfeed.com/rssbible/${sanitizedPlan}/${formatDateToyyyyMMdd(
+          sanitizedStartDate
+        )}/${sanitizedTranslation}/${sanitizedChapters}/feed.rss`,
+        siteUrl: 'https://www.bibleplanfeed.com/',
+        imageUrl: 'https://www.bibleplanfeed.com/icon.png',
+        managingEditor: 'github.com/tryonlinux - Not affiliated with Bible Gateway',
+        webMaster: 'github.com/tryonlinux',
+        copyright: 'github.com/tryonlinux - Not affiliated with Bible Gateway',
+        language: 'en',
+        pubDate: new Date(),
+        ttl: 60,
+      };
+
+      const items = BuildRSSFeedItems(
+        sanitizedPlan,
+        sanitizedTranslation,
+        sanitizedStartDate,
+        sanitizedChapters
+      );
+      const rssXML = generateRSSXML(feedMetadata, items);
+
+      return new Response(rssXML, {
+        headers: {
+          'Content-Type': 'application/rss+xml',
+          'Cache-Control': 'public, max-age=3600',
+          'X-Content-Type-Options': 'nosniff',
+          'X-Frame-Options': 'DENY',
+        },
+      });
+    }
+
+    // Serve static assets (index.html, translations.json, icon.png)
+    // Workers Assets automatically handles these from the public/ directory
+    return env.ASSETS.fetch(request);
+  },
+};

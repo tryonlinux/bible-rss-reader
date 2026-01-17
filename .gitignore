@@ -105,3 +105,25 @@ dist
 .DS_Store
 package-lock.json
 yarn.lock
+
+# Cloudflare Workers / Wrangler
+.wrangler/
+.dev.vars
+wrangler.toml.backup
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Build output
+dist/
+
+# Mise version manager
+.mise.local.toml
