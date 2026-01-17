@@ -1,0 +1,21 @@
+name = "bible-rss-reader"
+main = "src/worker.ts"
+compatibility_date = "2026-01-01"
+
+# Custom domains
+routes = [
+  { pattern = "bibleplanfeed.com", custom_domain = true },
+  { pattern = "www.bibleplanfeed.com", custom_domain = true }
+]
+
+# Static assets configuration
+[assets]
+directory = "./public"
+
+# Development settings
+[dev]
+port = 8787
+
+# Environment variables (optional)
+[vars]
+# ENVIRONMENT = "development"

@@ -1,0 +1,6 @@
+# Allow all search engines to index the site
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://www.bibleplanfeed.com/sitemap.xml
