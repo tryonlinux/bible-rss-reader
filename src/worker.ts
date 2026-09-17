@@ -96,7 +96,8 @@ const generateRSSXML = (
 // Ensure the plan is valid, if not return full
 const SanitizePlan = (plan: any): 'nt' | 'ot' | 'full' => {
   const validValues: Array<'nt' | 'ot' | 'full'> = ['nt', 'ot', 'full'];
-  return validValues.includes(plan) ? plan : 'full';
+  const normalized = typeof plan === 'string' ? plan.toLowerCase() : plan;
+  return validValues.includes(normalized) ? normalized : 'full';
 };
 
 // Ensure the date is valid, if not return today
@@ -114,9 +115,9 @@ const SanitizeDate = (dateString: string): Date => {
       return new Date();
     }
 
-    const date = new Date(year, month, day);
+    const date = new Date(Date.UTC(year, month, day));
     // Check if date rolled over (e.g., Feb 30 became Mar 2)
-    if (date.getMonth() !== month) {
+    if (date.getUTCMonth() !== month) {
       return new Date();
     }
 
@@ -145,9 +146,9 @@ const SanitizeChapters = (chapters: string): number => {
 };
 
 function formatDateToyyyyMMdd(date: Date): string {
-  const yyyy = date.getFullYear();
-  const MM = String(date.getMonth() + 1).padStart(2, '0');
-  const dd = String(date.getDate()).padStart(2, '0');
+  const yyyy = date.getUTCFullYear();
+  const MM = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const dd = String(date.getUTCDate()).padStart(2, '0');
   return `${yyyy}${MM}${dd}`;
 }
 
@@ -184,7 +185,7 @@ const BuildRSSFeedItems = (
     // Midnight UTC on the day the chapter becomes available (day N appears N days
     // after the start date), so the timestamp is stable across fetches
     date: new Date(
-      Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()) +
+      Date.UTC(startDate.getUTCFullYear(), startDate.getUTCMonth(), startDate.getUTCDate()) +
         Math.ceil((index + 1) / numberOfChapters) * 24 * 60 * 60 * 1000
     ),
   });
@@ -197,9 +198,10 @@ function getDaysBetween(date: Date): number {
   // Use UTC dates to ensure consistency between local dev and production
   const now = new Date();
   const nowUTC = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
-  const compareUTC = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
+  const compareUTC = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
 
-  const diffInMilliSeconds = Math.abs(nowUTC - compareUTC);
+  // A start date in the future has no chapters available yet
+  const diffInMilliSeconds = Math.max(0, nowUTC - compareUTC);
   return Math.floor(diffInMilliSeconds / (1000 * 60 * 60 * 24));
 }
 

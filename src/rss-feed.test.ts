@@ -45,7 +45,7 @@ describe('RSS Feed Generation', () => {
     it('should generate correct items for 1 day of reading (1 chapter/day)', async () => {
       // Start date: 1 day ago
       const yesterday = new Date();
-      yesterday.setDate(yesterday.getDate() - 1);
+      yesterday.setUTCDate(yesterday.getUTCDate() - 1);
       const dateStr = yesterday.toISOString().slice(0, 10).replace(/-/g, '');
 
       const url = `${baseUrl}/rssbible/ot/esv/${dateStr}/1/feed.rss`;
@@ -60,7 +60,7 @@ describe('RSS Feed Generation', () => {
     it('should generate correct items for 5 days of reading (1 chapter/day)', async () => {
       // Start date: 5 days ago
       const fiveDaysAgo = new Date();
-      fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5);
+      fiveDaysAgo.setUTCDate(fiveDaysAgo.getUTCDate() - 5);
       const dateStr = fiveDaysAgo.toISOString().slice(0, 10).replace(/-/g, '');
 
       const url = `${baseUrl}/rssbible/ot/esv/${dateStr}/1/feed.rss`;
@@ -76,7 +76,7 @@ describe('RSS Feed Generation', () => {
     it('should generate correct items for 10 days of reading (1 chapter/day)', async () => {
       // Start date: 10 days ago
       const tenDaysAgo = new Date();
-      tenDaysAgo.setDate(tenDaysAgo.getDate() - 10);
+      tenDaysAgo.setUTCDate(tenDaysAgo.getUTCDate() - 10);
       const dateStr = tenDaysAgo.toISOString().slice(0, 10).replace(/-/g, '');
 
       const url = `${baseUrl}/rssbible/ot/esv/${dateStr}/1/feed.rss`;
@@ -94,7 +94,7 @@ describe('RSS Feed Generation', () => {
     it('should generate correct items for 5 days with 3 chapters/day', async () => {
       // Start date: 5 days ago
       const fiveDaysAgo = new Date();
-      fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5);
+      fiveDaysAgo.setUTCDate(fiveDaysAgo.getUTCDate() - 5);
       const dateStr = fiveDaysAgo.toISOString().slice(0, 10).replace(/-/g, '');
 
       const url = `${baseUrl}/rssbible/full/niv/${dateStr}/3/feed.rss`;
@@ -110,7 +110,7 @@ describe('RSS Feed Generation', () => {
     it('should generate correct items for 10 days with 2 chapters/day', async () => {
       // Start date: 10 days ago
       const tenDaysAgo = new Date();
-      tenDaysAgo.setDate(tenDaysAgo.getDate() - 10);
+      tenDaysAgo.setUTCDate(tenDaysAgo.getUTCDate() - 10);
       const dateStr = tenDaysAgo.toISOString().slice(0, 10).replace(/-/g, '');
 
       const url = `${baseUrl}/rssbible/full/kjv/${dateStr}/2/feed.rss`;
@@ -128,7 +128,7 @@ describe('RSS Feed Generation', () => {
     it('should generate correct items for 5 days of reading (1 chapter/day)', async () => {
       // Start date: 5 days ago
       const fiveDaysAgo = new Date();
-      fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5);
+      fiveDaysAgo.setUTCDate(fiveDaysAgo.getUTCDate() - 5);
       const dateStr = fiveDaysAgo.toISOString().slice(0, 10).replace(/-/g, '');
 
       const url = `${baseUrl}/rssbible/nt/esv/${dateStr}/1/feed.rss`;
@@ -145,7 +145,7 @@ describe('RSS Feed Generation', () => {
   describe('RSS Feed Validation', () => {
     it('should return valid XML with required RSS elements', async () => {
       const yesterday = new Date();
-      yesterday.setDate(yesterday.getDate() - 1);
+      yesterday.setUTCDate(yesterday.getUTCDate() - 1);
       const dateStr = yesterday.toISOString().slice(0, 10).replace(/-/g, '');
 
       const url = `${baseUrl}/rssbible/ot/esv/${dateStr}/1/feed.rss`;
@@ -168,7 +168,7 @@ describe('RSS Feed Generation', () => {
 
     it('should include proper Bible Gateway links', async () => {
       const yesterday = new Date();
-      yesterday.setDate(yesterday.getDate() - 1);
+      yesterday.setUTCDate(yesterday.getUTCDate() - 1);
       const dateStr = yesterday.toISOString().slice(0, 10).replace(/-/g, '');
 
       const url = `${baseUrl}/rssbible/ot/esv/${dateStr}/1/feed.rss`;
