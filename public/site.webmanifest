@@ -1,0 +1,14 @@
+{
+  "name": "Bible Plan Feed",
+  "short_name": "Bible Feed",
+  "description": "Custom RSS feeds for daily Bible reading plans.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f1e7",
+  "theme_color": "#2a1d14",
+  "icons": [
+    { "src": "/icon.svg", "type": "image/svg+xml", "sizes": "any" },
+    { "src": "/icon-192.png", "type": "image/png", "sizes": "192x192" },
+    { "src": "/icon-512.png", "type": "image/png", "sizes": "512x512" }
+  ]
+}

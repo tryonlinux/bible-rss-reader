@@ -1,6 +1,8 @@
 # Allow all search engines to index the site
 User-agent: *
 Allow: /
+# Feeds are personal and generated on demand, so keep them out of search results
+Disallow: /rssbible/
 
 # Sitemap
 Sitemap: https://www.bibleplanfeed.com/sitemap.xml

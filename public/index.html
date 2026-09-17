@@ -4,50 +4,197 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Create custom RSS feeds for Bible reading plans. Old Testament, New Testament, or full Bible. Choose your translation and daily chapter count.">
+    <meta name="description" content="Build a free RSS feed for a daily Bible reading plan. Choose the Old Testament, New Testament, or whole Bible, pick from 200+ translations, and set how many chapters a day.">
     <meta name="keywords" content="bible rss feed, bible reading plan, rss feed generator, bible gateway, daily bible reading, scripture feed">
     <meta name="author" content="Jordan Tryon">
+    <meta name="theme-color" content="#f6f1e7" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#16130f" media="(prefers-color-scheme: dark)">
 
     <!-- Open Graph / Social Media -->
     <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Bible Plan Feed">
+    <meta property="og:locale" content="en_US">
     <meta property="og:url" content="https://www.bibleplanfeed.com/">
-    <meta property="og:title" content="Bible Plan RSS Feed Generator">
-    <meta property="og:description" content="Create custom RSS feeds for Bible reading plans. Old Testament, New Testament, or full Bible.">
-    <meta property="og:image" content="https://www.bibleplanfeed.com/icon.png">
+    <meta property="og:title" content="Bible Plan Feed: Daily Bible Reading in Your RSS Reader">
+    <meta property="og:description" content="Build a free RSS feed for any Bible reading plan. Pick the Old Testament, New Testament, or whole Bible, your translation, and how many chapters a day.">
+    <meta property="og:image" content="https://www.bibleplanfeed.com/og-image.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Bible Plan Feed: Scripture, delivered to your feed reader.">
 
-    <!-- Canonical URL -->
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Bible Plan Feed: Daily Bible Reading in Your RSS Reader">
+    <meta name="twitter:description" content="Build a free RSS feed for any Bible reading plan, in your translation, at your pace.">
+    <meta name="twitter:image" content="https://www.bibleplanfeed.com/og-image.png">
+    <meta name="twitter:image:alt" content="Bible Plan Feed: Scripture, delivered to your feed reader.">
+
+    <!-- Canonical URL + icons -->
     <link rel="canonical" href="https://www.bibleplanfeed.com/">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="icon" href="icon.png" type="image/png" sizes="48x48">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="stylesheet" href="styles.css">
 
-    <title>Bible Plan RSS Feed Generator - Daily Scripture Reading Plans</title>
+    <!-- Structured data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "WebSite",
+                "name": "Bible Plan Feed",
+                "url": "https://www.bibleplanfeed.com/"
+            },
+            {
+                "@type": "WebApplication",
+                "name": "Bible Plan Feed",
+                "url": "https://www.bibleplanfeed.com/",
+                "description": "Build a free RSS feed for a daily Bible reading plan: Old Testament, New Testament, or the whole Bible, in your chosen translation and pace.",
+                "applicationCategory": "LifestyleApplication",
+                "operatingSystem": "Any",
+                "image": "https://www.bibleplanfeed.com/og-image.png",
+                "isAccessibleForFree": true,
+                "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+                "author": { "@type": "Person", "name": "Jordan Tryon", "url": "https://github.com/tryonlinux" }
+            }
+        ]
+    }
+    </script>
+
+    <title>Bible Plan Feed: Daily Bible Reading Plans for Your RSS Reader</title>
+    <script src="app.js" defer></script>
 </head>
 
 <body>
-    <header>
-        <h1>Bible Plan RSS Feed Generator</h1>
-        <h3>Simple to use RSS Feed Generator for reading a specified number of chapters per day from a feed reader.</h3>
+    <header class="hero">
+        <div class="wrap">
+            <p class="eyebrow">Bible Plan Feed</p>
+            <h1>Scripture, delivered to your <span class="accent">feed reader</span> every day.</h1>
+            <p class="lede">Pick a plan, a translation, and a pace. You get an RSS feed that adds the day's chapters each morning, with links to read them on Bible Gateway.</p>
+            <a class="button button-primary" href="#builder">Build my feed</a>
+        </div>
     </header>
-    <article>
-        <h2>How to use</h2>
-        <p>Build an RSS feed url like the below examples. You specify the plan using the plan code (ot,nt,full), the <a href="./translations.json">translation code</a>, start date, and number of chapters you want to have added to to your RSS Feed each day. Note, the start day should be the date for yesterday for day 1.</p>
-        <h2>Examples (note all will show the entire plan due to date being so far in past and should not be used)</h2>
-        <h5>Notes:Dates are in yyyyMMdd format so June 5th, 2026 = 20260605</h5>
-        <ul>
-            <li>Old Testament Only with 1 chapter a day starting with 2026-01-01: <a href="https://www.bibleplanfeed.com/rssbible/ot/esv/20260101/1/feed.rss">https://www.bibleplanfeed.com/rssbible/ot/esv/20260101/1/feed.rss</a></li>
-            <li>New Testament Only with 1 chapter a day starting with 2026-01-01: <a
-                    href="https://www.bibleplanfeed.com/rssbible/nt/esv/20260101/1/feed.rss">https://www.bibleplanfeed.com/rssbible/nt/esv/20260101/1/feed.rss</a>
-            </li>
-            <li>Full bible with 1 chapter a day starting with 2026-01-01: <a
-                    href="https://www.bibleplanfeed.com/rssbible/full/esv/20260101/1/feed.rss">https://www.bibleplanfeed.com/rssbible/full/esv/20260101/1/feed.rss</a>
-            </li>
-            <li>Full bible with 5 chapters a day starting with 2026-01-01: <a
-                    href="https://www.bibleplanfeed.com/rssbible/full/esv/20260101/5/feed.rss">https://www.bibleplanfeed.com/rssbible/full/esv/20260101/5/feed.rss</a>
-            </li>
-        </ul>
-        <br>
-        <h3>If you liked this and want to support it, feel free to <a href="https://buymeacoffee.com/tryomas">Buy Me A Coffee</a>. Thanks!</h3>
-    </article>
-    <footer>
-        <h6>© 2026 Jordan Tryon <a href="https://github.com/tryonlinux/bible-rss-reader">Source Code</a></h6>
+
+    <main>
+        <section id="builder" class="wrap builder-section" aria-labelledby="builder-title">
+            <form class="card builder" id="builder-form" action="#builder">
+                <h2 id="builder-title">Build your feed</h2>
+
+                <fieldset class="field">
+                    <legend>Reading plan</legend>
+                    <div class="plans">
+                        <label class="plan">
+                            <input type="radio" name="plan" value="full" checked>
+                            <span class="plan-body">
+                                <span class="plan-name">Whole Bible</span>
+                                <span class="plan-meta">1,189 chapters</span>
+                            </span>
+                        </label>
+                        <label class="plan">
+                            <input type="radio" name="plan" value="ot">
+                            <span class="plan-body">
+                                <span class="plan-name">Old Testament</span>
+                                <span class="plan-meta">929 chapters</span>
+                            </span>
+                        </label>
+                        <label class="plan">
+                            <input type="radio" name="plan" value="nt">
+                            <span class="plan-body">
+                                <span class="plan-name">New Testament</span>
+                                <span class="plan-meta">260 chapters</span>
+                            </span>
+                        </label>
+                    </div>
+                </fieldset>
+
+                <div class="field-row">
+                    <div class="field">
+                        <label for="translation">Translation</label>
+                        <select id="translation" name="translation">
+                            <option value="ESV" selected>English Standard Version (ESV)</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="start">Start date</label>
+                        <input type="date" id="start" name="start" min="1900-01-01" max="2100-12-31">
+                        <p class="hint">Day 1 arrives the day after this date.</p>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="chapters">Chapters per day</label>
+                    <div class="stepper">
+                        <button type="button" class="step" data-step="-1" aria-label="Fewer chapters">&minus;</button>
+                        <input type="number" id="chapters" name="chapters" value="3" min="1" max="99" inputmode="numeric">
+                        <button type="button" class="step" data-step="1" aria-label="More chapters">+</button>
+                    </div>
+                    <p class="summary" id="summary" aria-live="polite"></p>
+                </div>
+
+                <div class="result">
+                    <label for="feed-url">Your feed URL</label>
+                    <output id="feed-url" class="feed-url" for="translation start chapters">https://www.bibleplanfeed.com/rssbible/full/esv/20260101/3/feed.rss</output>
+                    <div class="actions">
+                        <button type="button" class="button button-primary" id="copy">Copy URL</button>
+                        <a class="button button-ghost" id="open" href="https://www.bibleplanfeed.com/rssbible/full/esv/20260101/3/feed.rss">Preview feed</a>
+                    </div>
+                    <p class="hint">Paste it into Feedly, NetNewsWire, Inoreader, or any other RSS reader.</p>
+                </div>
+            </form>
+        </section>
+
+        <section class="wrap steps" aria-labelledby="how-title">
+            <h2 id="how-title">How it works</h2>
+            <ol class="step-list">
+                <li class="card">
+                    <span class="step-num">1</span>
+                    <h3>Build</h3>
+                    <p>Choose your plan, translation, start date, and how many chapters to read each day.</p>
+                </li>
+                <li class="card">
+                    <span class="step-num">2</span>
+                    <h3>Subscribe</h3>
+                    <p>Add the URL to your RSS reader. There's no account or email to sign up with.</p>
+                </li>
+                <li class="card">
+                    <span class="step-num">3</span>
+                    <h3>Read</h3>
+                    <p>New chapters appear each day. Tap one to open it on Bible Gateway.</p>
+                </li>
+            </ol>
+        </section>
+
+        <section class="wrap" aria-labelledby="manual-title">
+            <details class="card manual">
+                <summary><h2 id="manual-title">Build the URL by hand</h2></summary>
+                <p>The feed URL follows this pattern:</p>
+                <code class="pattern">/rssbible/<b>{plan}</b>/<b>{translation}</b>/<b>{yyyyMMdd}</b>/<b>{chapters}</b>/feed.rss</code>
+                <ul class="params">
+                    <li><b>plan</b>: <code>ot</code>, <code>nt</code>, or <code>full</code></li>
+                    <li><b>translation</b>: any code from the <a href="translations.json">translation list</a>, such as <code>esv</code> or <code>kjv</code></li>
+                    <li><b>yyyyMMdd</b>: the start date, so June 5th, 2026 is <code>20260605</code>. Use yesterday's date to start on day 1 today.</li>
+                    <li><b>chapters</b>: chapters per day, from 1 to 99</li>
+                </ul>
+                <p>Example: the whole Bible in the ESV, 5 chapters a day, starting January 1st, 2026:</p>
+                <a class="feed-url feed-url-link" href="https://www.bibleplanfeed.com/rssbible/full/esv/20260101/5/feed.rss">https://www.bibleplanfeed.com/rssbible/full/esv/20260101/5/feed.rss</a>
+            </details>
+        </section>
+
+        <section class="wrap support" aria-label="Support">
+            <p>Find this useful? You can support it with a <a href="https://buymeacoffee.com/tryomas">coffee</a>. Thanks!</p>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="wrap">
+            <span>&copy; 2026 Jordan Tryon</span>
+            <a href="https://github.com/tryonlinux/bible-rss-reader">Source code</a>
+            <span>Not affiliated with Bible Gateway</span>
+        </div>
     </footer>
 </body>
 

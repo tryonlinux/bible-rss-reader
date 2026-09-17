@@ -195,11 +195,26 @@ npm run deploy
 ### Static Assets
 
 Files in `public/` are automatically deployed:
-- `index.html` - Homepage with SEO meta tags
+- `index.html` - Homepage with feed URL builder, SEO/Open Graph tags, JSON-LD
+- `app.js`, `styles.css` - Builder script and styles (external so they pass the Express CSP)
+- `404.html` - Not-found page (served via `not_found_handling = "404-page"`)
 - `translations.json` - Available translations
-- `icon.png` - Site icon
-- `robots.txt` - SEO configuration
+- `icon.svg` - Source icon; `icon.png`, `icon-192.png`, `icon-512.png`, `apple-touch-icon.png`, `favicon.ico` are generated from it
+- `og-image.svg` - Source for `og-image.png` (1200x630 social preview)
+- `site.webmanifest` - Web app manifest
+- `robots.txt` - SEO configuration (feeds under `/rssbible/` are disallowed)
 - `sitemap.xml` - Search engine sitemap
+
+Regenerate images after editing the SVGs:
+```bash
+cd public
+sips -s format png -Z 512 icon.svg --out icon-512.png
+sips -s format png -Z 192 icon.svg --out icon-192.png
+sips -s format png -Z 48 icon.svg --out icon.png
+sed 's/rx="112" //' icon.svg > /tmp/icon-square.svg && sips -s format png -Z 180 /tmp/icon-square.svg --out apple-touch-icon.png
+magick icon-512.png -define icon:auto-resize=48,32,16 favicon.ico
+inkscape og-image.svg --export-type=png --export-filename=og-image.png  # sips drops tspan styling
+```
 
 ## Common Tasks
 

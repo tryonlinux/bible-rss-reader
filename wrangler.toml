@@ -11,6 +11,11 @@ routes = [
 # Static assets configuration
 [assets]
 directory = "./public"
+# Exposes env.ASSETS to the Worker; without it, any non-feed request that
+# isn't a static file throws and returns a 500
+binding = "ASSETS"
+# Serve public/404.html for unknown paths
+not_found_handling = "404-page"
 
 # Development settings
 [dev]

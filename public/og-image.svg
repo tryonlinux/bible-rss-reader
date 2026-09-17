@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.6" y2="1">
+      <stop offset="0" stop-color="#2a1d14"/>
+      <stop offset="1" stop-color="#5b2a12"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.88" cy="0.08" r="0.5">
+      <stop offset="0" stop-color="#b7791f" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#b7791f" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3a2618"/>
+      <stop offset="1" stop-color="#8a3f16"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <text x="80" y="170" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="3.5" fill="#f2c879">FREE BIBLE READING PLANS</text>
+  <g font-family="Palatino, Georgia, serif" font-size="70" font-weight="700" fill="#fdf6ea">
+    <text x="80" y="258">Scripture, delivered</text>
+    <text x="80" y="336">to your <tspan fill="#f2c879" font-style="italic">feed reader</tspan>.</text>
+  </g>
+  <text x="80" y="408" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="30" fill="#fdf6ea" fill-opacity="0.85">Any plan, any translation, at your pace.</text>
+  <rect x="80" y="450" width="306" height="58" rx="29" fill="#f2c879"/>
+  <text x="233" y="488" text-anchor="middle" font-family="Menlo, monospace" font-size="25" font-weight="700" fill="#2a1d14">bibleplanfeed.com</text>
+
+  <!-- app icon tile -->
+  <g transform="translate(830 165) scale(0.586)">
+    <rect width="512" height="512" rx="112" fill="url(#tile)"/>
+    <path d="M256 170c-38-26-92-34-140-26v214c48-8 102 0 140 26 38-26 92-34 140-26V144c-48-8-102 0-140 26z" fill="#fdf6ea"/>
+    <path d="M256 170v214" stroke="#c9a46a" stroke-width="8"/>
+    <g fill="none" stroke="#f2c879" stroke-width="22" stroke-linecap="round">
+      <path d="M206 112a70 70 0 0 1 100 0"/>
+      <path d="M176 78a112 112 0 0 1 160 0"/>
+    </g>
+    <circle cx="256" cy="136" r="15" fill="#f2c879"/>
+    <g stroke="#b9a58a" stroke-width="10" stroke-linecap="round">
+      <path d="M152 214h72M152 250h72M152 286h60M288 214h72M288 250h72M288 286h56"/>
+    </g>
+  </g>
+</svg>
