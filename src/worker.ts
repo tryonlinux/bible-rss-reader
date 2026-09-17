@@ -232,9 +232,9 @@ export default {
       const feedMetadata = {
         title: 'Bible Plan Feed',
         description: 'Go to www.bibleplanfeed.com for more information.',
-        feedUrl: `https://www.bibleplanfeed.com/rssbible/${sanitizedPlan}/${formatDateToyyyyMMdd(
+        feedUrl: `https://www.bibleplanfeed.com/rssbible/${sanitizedPlan}/${sanitizedTranslation}/${formatDateToyyyyMMdd(
           sanitizedStartDate
-        )}/${sanitizedTranslation}/${sanitizedChapters}/feed.rss`,
+        )}/${sanitizedChapters}/feed.rss`,
         siteUrl: 'https://www.bibleplanfeed.com/',
         imageUrl: 'https://www.bibleplanfeed.com/icon.png',
         managingEditor: 'github.com/tryonlinux - Not affiliated with Bible Gateway',

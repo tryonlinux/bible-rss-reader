@@ -150,9 +150,9 @@ app.get('/rssbible/:plan/:translation/:startDate/:chapters/feed.rss', (req, res)
   const feedMetadata = {
     title: 'Bible Plan Feed',
     description: 'Go to www.bibleplanfeed.com for more information.',
-    feedUrl: `https://www.bibleplanfeed.com/rssbible/${plan}/${formatDateToyyyyMMdd(
+    feedUrl: `https://www.bibleplanfeed.com/rssbible/${plan}/${translation}/${formatDateToyyyyMMdd(
       startDate
-    )}/${translation}/${chapters}/feed.rss`,
+    )}/${chapters}/feed.rss`,
     siteUrl: 'https://www.bibleplanfeed.com/',
     imageUrl: 'https://www.bibleplanfeed.com/icon.png',
     managingEditor: 'github.com/tryonlinux - Not affiliated with Bible Gateway',
