@@ -95,7 +95,7 @@ npm run lint       # Run ESLint
 - `chapters`: Number of chapters per day, 1-99 (defaults to 1)
 
 **Validation:**
-- Date range: 1900-2100 with rollover detection
+- Date range: 1900-2100 with rollover detection, then clamped by `ClampStartDate()` to between "plan already finished" (plan chapters / chapters per day, in days) and 365 days ahead. The builder in `public/app.js` applies the same range to its date picker
 - Chapter count: 1-99, rejects zero/negative
 - Translation: Validated against translations.json whitelist
 - Maximum chapters: Capped at 1189 (full Bible length)

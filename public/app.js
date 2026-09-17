@@ -5,6 +5,8 @@
 
   var BASE = 'https://www.bibleplanfeed.com/rssbible';
   var PLAN_CHAPTERS = { full: 1189, ot: 929, nt: 260 };
+  // Matches the server's clamp: earlier dates already give the complete plan
+  var MAX_DAYS_AHEAD = 365;
 
   var form = document.getElementById('builder-form');
   var translation = document.getElementById('translation');
@@ -39,9 +41,31 @@
     return Math.min(99, Math.max(1, n));
   }
 
-  function update() {
+  function addDays(date, days) {
+    var d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    d.setDate(d.getDate() + days);
+    return d;
+  }
+
+  // Limit the picker to dates that change the feed, and pull the value into range.
+  function syncDateRange(plan, perDay, clampValue) {
+    var today = new Date();
+    var min = toInputValue(addDays(today, -Math.ceil(PLAN_CHAPTERS[plan] / perDay)));
+    var max = toInputValue(addDays(today, MAX_DAYS_AHEAD));
+    start.min = min;
+    start.max = max;
+    if (clampValue && /^\d{4}-\d{2}-\d{2}$/.test(start.value)) {
+      if (start.value < min) start.value = min;
+      if (start.value > max) start.value = max;
+    }
+  }
+
+  function update(event) {
     var plan = selectedPlan();
     var perDay = chapterCount();
+    // Don't snap the date while it's still being typed (e.g. a partial year).
+    var typingDate = event && event.type === 'input' && event.target === start;
+    syncDateRange(plan, perDay, !typingDate);
     var startValue = /^\d{4}-\d{2}-\d{2}$/.test(start.value) ? start.value : toInputValue(new Date());
     var url = [
       BASE,

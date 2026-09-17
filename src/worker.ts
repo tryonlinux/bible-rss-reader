@@ -145,6 +145,20 @@ const SanitizeChapters = (chapters: string): number => {
   return result;
 };
 
+// Keep the start date within the range that can change a feed: no earlier than
+// the day the plan would already be finished, and at most a year ahead
+const MAX_DAYS_AHEAD = 365;
+const ClampStartDate = (date: Date, plan: 'nt' | 'ot' | 'full', chapters: number): Date => {
+  const DAY_MS = 24 * 60 * 60 * 1000;
+  const planLength = { full: fullBookList.length, ot: otBookList.length, nt: ntBookList.length }[plan];
+  const now = new Date();
+  const todayUTC = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  const earliest = todayUTC - Math.ceil(planLength / chapters) * DAY_MS;
+  const latest = todayUTC + MAX_DAYS_AHEAD * DAY_MS;
+  const startUTC = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+  return new Date(Math.min(Math.max(startUTC, earliest), latest));
+};
+
 function formatDateToyyyyMMdd(date: Date): string {
   const yyyy = date.getUTCFullYear();
   const MM = String(date.getUTCMonth() + 1).padStart(2, '0');
@@ -228,8 +242,8 @@ export default {
       const [, plan, translation, startDate, chapters] = rssMatch;
 
       const sanitizedPlan = SanitizePlan(plan);
-      const sanitizedStartDate = SanitizeDate(startDate);
       const sanitizedChapters = SanitizeChapters(chapters);
+      const sanitizedStartDate = ClampStartDate(SanitizeDate(startDate), sanitizedPlan, sanitizedChapters);
       const sanitizedTranslation = SanitizeTranslation(translation);
 
       const feedMetadata = {

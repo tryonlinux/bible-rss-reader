@@ -143,8 +143,8 @@ if (isDevelopment) {
 //localhost:3000/rssbible/ot/esv/20230801/3/feed.rss
 app.get('/rssbible/:plan/:translation/:startDate/:chapters/feed.rss', (req, res) => {
   let plan = SanitizePlan(req.params.plan);
-  let startDate = SanitizeDate(req.params.startDate);
   let chapters = SanitizeChapters(req.params.chapters);
+  let startDate = ClampStartDate(SanitizeDate(req.params.startDate), plan, chapters);
   let translation = SanitizeTranslation(req.params.translation);
 
   const feedMetadata = {
@@ -221,6 +221,20 @@ const SanitizeChapters = (chapters: string): number => {
     return 1;
   }
   return result;
+};
+
+// Keep the start date within the range that can change a feed: no earlier than
+// the day the plan would already be finished, and at most a year ahead
+const MAX_DAYS_AHEAD = 365;
+const ClampStartDate = (date: Date, plan: 'nt' | 'ot' | 'full', chapters: number): Date => {
+  const DAY_MS = 24 * 60 * 60 * 1000;
+  const planLength = { full: fullBookList.length, ot: otBookList.length, nt: ntBookList.length }[plan];
+  const now = new Date();
+  const todayUTC = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  const earliest = todayUTC - Math.ceil(planLength / chapters) * DAY_MS;
+  const latest = todayUTC + MAX_DAYS_AHEAD * DAY_MS;
+  const startUTC = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+  return new Date(Math.min(Math.max(startUTC, earliest), latest));
 };
 
 function formatDateToyyyyMMdd(date: Date): string {
