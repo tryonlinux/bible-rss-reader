@@ -259,10 +259,11 @@ const BuildRSSFeedItems = (
     )} of ${plan.toUpperCase()} plan in ${translation.toUpperCase()}`,
     url: BuildBibleGatewayURL(chapter.Book, chapter.Chapter, translation),
     author: 'Bible Gateway',
+    // Midnight UTC on the day the chapter becomes available (day N appears N days
+    // after the start date), so the timestamp is stable across fetches
     date: new Date(
-      new Date().setDate(
-        new Date().getDate() - 1 - (daysBetween - Math.ceil((index + 1) / numberOfChapters))
-      )
+      Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()) +
+        Math.ceil((index + 1) / numberOfChapters) * 24 * 60 * 60 * 1000
     ),
   });
 
